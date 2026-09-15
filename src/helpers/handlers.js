@@ -1,48 +1,40 @@
 import { getAudioFeatures } from "./api";
 
-const labels = [
+// Só features que o Spotify devolve normalizadas em 0..1.
+// "loudness" ficou de fora: é dB (-60..0) e não cabe numa barra de progresso.
+const FEATURES = [
   "energy",
-  "loudness",
   "acousticness",
   "danceability",
   "instrumentalness",
   "liveness",
-  "loudness",
   "speechiness",
   "valence",
 ];
 
-export async function handleRecentlyPlayed(tokenData, recentlyPlayedArray) {
-  let minhaString = "";
-  for (let i = 0; i < recentlyPlayedArray.length; i++) {
-    minhaString += recentlyPlayedArray[i] + ",";
-  }
-  const audioFeaturesData = await getAudioFeatures(tokenData, minhaString);
-  return audioFeaturesData;
+function average(items, key) {
+  if (!items.length) return 0;
+  const sum = items.reduce((acc, item) => acc + (item[key] ?? 0), 0);
+  return sum / items.length;
 }
 
-export async function handleAverage(value, testinhun) {
-  const energy = testinhun.map((e) => e[value]);
-  let sum = 0;
-  for (let i = 0; i < energy.length; i++) {
-    sum += energy[i];
-  }
-  return sum / energy.length;
-}
+/**
+ * Média das características das faixas tocadas recentemente.
+ * Retorna null quando o endpoint /audio-features não está disponível
+ * (depreciado pelo Spotify em nov/2024 para apps sem extended quota),
+ * e aí a seção de análise some da tela em vez de renderizar vazia.
+ */
+export async function getTrackAnalysis(token, trackIds) {
+  const ids = [...new Set(trackIds.filter(Boolean))].slice(0, 100);
+  if (!ids.length) return null;
 
-export async function analyseTracks(recentlyPlayedFormated) {
-  let newArray = [];
-  labels.forEach(async (item) => {
-    const res = await handleAverage(item, recentlyPlayedFormated);
-    newArray.push(res.toFixed(2));
-  });
+  const features = await getAudioFeatures(token, ids.join(","));
+  // a API devolve null nas posições de faixas que ela não conhece
+  const valid = (features || []).filter(Boolean);
+  if (!valid.length) return null;
 
-  return newArray;
-}
-export function formatAnalysedTrack(trackAverage) {
-  const track = {};
-  for (let i = 0; i < trackAverage.length; i++) {
-    track[labels[i]] = trackAverage[i];
-  }
-  return track;
+  return FEATURES.reduce((analysis, key) => {
+    analysis[key] = average(valid, key);
+    return analysis;
+  }, {});
 }

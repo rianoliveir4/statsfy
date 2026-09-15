@@ -1,22 +1,11 @@
-import { useRouter } from "next/router";
 import Logo from "../images/spotify.png";
 import Image from "next/image";
-
-const client_id = "287c949757504329b8508ecd7671196c";
-const response_type = "token";
-const auth_endpoint = "https://accounts.spotify.com/authorize";
-const redirect_url = "https://statssfy.netlify.app/stats/";
-const scopes =
-  "user-top-read user-read-recently-played playlist-read-private playlist-read-collaborative user-read-email";
+import { redirectToSpotifyLogin } from "@/helpers/auth";
 
 export default function Home() {
-  const router = useRouter();
-  const handleClick = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    localStorage.removeItem("token");
-    router.push(
-      `${auth_endpoint}?client_id=${client_id}&redirect_uri=${redirect_url}&response_type=${response_type}&scope=${scopes}`
-    );
+    await redirectToSpotifyLogin();
   };
   return (
     <>

@@ -1,26 +1,8 @@
 const baseURL = "https://api.spotify.com/v1/";
 import axios from "axios";
 
-export const handleToken = async (token) => {
-  try {
-    const hash = window.location.hash;
-    let token = window.localStorage.getItem("token");
+export { handleToken, clearSession } from "./auth";
 
-    if (!token && hash) {
-      token = hash
-        .substring(1)
-        .split("&")
-        .find((elem) => elem.startsWith("access_token"))
-        .split("=")[1];
-
-      window.location.hash = "";
-      window.localStorage.setItem("token", token);
-    }
-    return token;
-  } catch (error) {
-    return error;
-  }
-};
 export const getTopItems = async (token, term, type) => {
   try {
     const data = await axios.get(
@@ -76,7 +58,9 @@ export const getAudioFeatures = async (token, ids) => {
     });
     return data.data.audio_features;
   } catch (error) {
-    return error;
+    // 403 desde a depreciacao de nov/2024; o chamador esconde a secao
+    console.warn("audio-features indisponivel:", error?.response?.status);
+    return null;
   }
 };
 export const getUser = async (token) => {

@@ -3,6 +3,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import {
   handleToken,
+  clearSession,
   getRecentlyPlayed,
   getUserPlaylists,
   getTopItems,
@@ -10,11 +11,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 
 import { useRouter } from "next/router";
-import {
-  analyseTracks,
-  formatAnalysedTrack,
-  handleRecentlyPlayed,
-} from "@/helpers/handlers";
+import { getTrackAnalysis } from "@/helpers/handlers";
 const Stats = () => {
   const [token, setToken] = useState("");
   const [topArtists, setTopArtists] = useState();
@@ -33,6 +30,10 @@ const Stats = () => {
       try {
         setLoading(true);
         const tokenData = await handleToken();
+        if (!tokenData) {
+          clearSession();
+          return router.push("/");
+        }
         setToken(tokenData);
         const topArtistsData = await getTopItems(
           tokenData,
@@ -40,7 +41,7 @@ const Stats = () => {
           "artists"
         );
         if (topArtistsData?.message?.includes("401")) {
-          localStorage.removeItem("token");
+          clearSession();
           return router.push("/");
         }
         setTopArtists(topArtistsData);
@@ -53,20 +54,15 @@ const Stats = () => {
         const recentlyPlayedData = await getRecentlyPlayed(tokenData);
         setRecentlyPlayed(recentlyPlayedData);
         const recentlyPlayedArray = recentlyPlayedData.map((e) => e.track.id);
-        const recentlyPlayedFormated = await handleRecentlyPlayed(
-          tokenData,
-          recentlyPlayedArray
+        setAnalyzedTracks(
+          await getTrackAnalysis(tokenData, recentlyPlayedArray)
         );
-        const analyzedTracksArrayData = await analyseTracks(
-          recentlyPlayedFormated
-        );
-        const analyzedTrack = formatAnalysedTrack(analyzedTracksArrayData);
-        setAnalyzedTracks(analyzedTrack);
         const userPlaylistsData = await getUserPlaylists(tokenData);
         setPlaylists(userPlaylistsData);
-        setLoading(false);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     }
     getData();
@@ -208,7 +204,7 @@ const Stats = () => {
               </div>
               <div className="m-4">
                 <h1 className="font-extrabold text-lg">Relaxed</h1>
-                <Progress value={analyzedTracks.energy} />
+                <Progress value={1 - analyzedTracks.energy} />
                 <p>Music that is slow and calm.</p>
               </div>
               <div className=" m-4">

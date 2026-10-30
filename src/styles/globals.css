@@ -13,7 +13,6 @@
 }
 
 @layer components {
-  /* rótulos em mono: eyebrows, legendas de gráfico, metadados */
   .label-mono {
     @apply font-mono text-[11px] font-medium;
   }
@@ -22,7 +21,6 @@
     @apply rounded-card border border-line bg-surface;
   }
 
-  /* placeholder listrado enquanto a imagem não chega */
   .cover-placeholder {
     background: repeating-linear-gradient(
       135deg,
@@ -31,7 +29,6 @@
     );
   }
 
-  /* entrada das seções ao rolar; a classe .in é aplicada via IntersectionObserver */
   [data-reveal] {
     opacity: 0;
     transform: translateY(34px);

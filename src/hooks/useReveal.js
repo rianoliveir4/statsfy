@@ -1,9 +1,5 @@
 import { useEffect, useRef } from "react";
 
-/**
- * Fade-up de entrada (estilos em [data-reveal] no globals.css).
- * O que já está visível ao montar entra direto; o resto espera o scroll.
- */
 export function useReveal() {
   const ref = useRef(null);
 

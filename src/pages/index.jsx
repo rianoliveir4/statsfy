@@ -1,7 +1,6 @@
 import { redirectToSpotifyLogin } from "@/helpers/auth";
 import { Logo } from "@/components/Logo";
 
-// Antes do login não temos dados do usuário: a órbita usa uma lista fixa.
 const ORBIT_ARTISTS = [
   "Kendrick Lamar",
   "Tame Impala",
@@ -85,8 +84,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-      {/* apaga a órbita atrás do texto */}
       <div
         aria-hidden
         className="absolute h-[360px] w-[360px] rounded-full md:h-[560px] md:w-[560px]"

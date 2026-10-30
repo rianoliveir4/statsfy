@@ -18,30 +18,28 @@ module.exports = {
       },
     },
     extend: {
-      // Tokens do StatsFy Revamp (design/html). O app é só dark.
       colors: {
-        ink: "#090a0c", // fundo da página
+        ink: "#090a0c",
         surface: {
-          DEFAULT: "#14171c", // cards, selects
-          raised: "#1b1f27", // placeholders, trilhos do loading
+          DEFAULT: "#14171c",
+          raised: "#1b1f27",
         },
-        track: "#2a2f3a", // fundo das barras de progresso
+        track: "#2a2f3a",
         line: {
-          DEFAULT: "rgba(255,255,255,.06)", // borda de card
-          strong: "rgba(255,255,255,.08)", // header, divisores
+          DEFAULT: "rgba(255,255,255,.06)",
+          strong: "rgba(255,255,255,.08)",
         },
         purple: {
           DEFAULT: "#5D3FD3",
-          light: "#8b74ff", // eyebrows, links, deltas positivos
-          pale: "#b5a6ff", // hover de link
+          light: "#8b74ff",
+          pale: "#b5a6ff",
         },
-        coral: "#ff8f6b", // deltas negativos
+        coral: "#ff8f6b",
       },
       fontFamily: {
         sans: ["Gabarito", ...defaultTheme.fontFamily.sans],
         mono: ['"JetBrains Mono"', ...defaultTheme.fontFamily.mono],
       },
-      // o design usa .35/.45/.55 o tempo todo; o Tailwind 3.3 não tem
       opacity: {
         35: ".35",
         45: ".45",
@@ -71,7 +69,6 @@ module.exports = {
           from: { transform: "rotate(0deg)" },
           to: { transform: "rotate(-360deg)" },
         },
-        // barra indeterminada: atravessa o trilho da esquerda pra direita
         "loading-bar": {
           from: { transform: "translateX(-100%)" },
           to: { transform: "translateX(240%)" },

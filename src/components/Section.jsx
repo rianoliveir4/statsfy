@@ -1,9 +1,5 @@
 import { useReveal } from "@/hooks/useReveal";
 
-/**
- * Seção da página de stats: título "Top <accent>" + algo à direita
- * (legenda em mono), com fade-up ao entrar na tela.
- */
 export function Section({ id, title, accent, aside, children }) {
   const ref = useReveal();
 

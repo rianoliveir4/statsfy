@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
-/**
- * Capa quadrada (artista, álbum, playlist). Sem src, ou se a imagem
- * falhar, mostra o placeholder listrado do design com um rótulo.
- * children fica por cima (ex.: badge de ranking).
- */
 export function Cover({ src, alt = "", label, className, children }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [src]);

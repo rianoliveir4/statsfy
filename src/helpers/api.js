@@ -3,10 +3,10 @@ import axios from "axios";
 
 export { handleToken, clearSession } from "./auth";
 
-export const getTopItems = async (token, term, type) => {
+export const getTopItems = async (token, term, type, limit = 10) => {
   try {
     const data = await axios.get(
-      `${baseURL}me/top/${type}?time_range=${term}&limit=10`,
+      `${baseURL}me/top/${type}?time_range=${term}&limit=${limit}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

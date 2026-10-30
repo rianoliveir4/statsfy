@@ -1,10 +1,13 @@
 import { cn } from "@/lib/utils";
 
-export function ShareBar({ value, gradient = false, className }) {
+export function ShareBar({ value, gradient = false, className, title }) {
   const pct = Math.round(Math.min(1, Math.max(0, value || 0)) * 100);
 
   return (
-    <div className={cn("h-[5px] w-24 overflow-hidden rounded-full bg-track", className)}>
+    <div
+      title={title}
+      className={cn("h-[5px] w-24 overflow-hidden rounded-full bg-track", className)}
+    >
       <div
         className={cn(
           "h-full",

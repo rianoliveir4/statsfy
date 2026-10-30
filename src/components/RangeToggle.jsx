@@ -4,7 +4,7 @@ import { RANGES } from "@/lib/ranges";
 export function RangeToggle({ value, onChange }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="label-mono text-white/35">RANGE</span>
+      <span className="label-mono hidden text-white/35 sm:inline">RANGE</span>
       <div
         role="radiogroup"
         aria-label="Time range"

@@ -22,18 +22,6 @@ export const getTopItems = async (token, term, type, limit = 10) => {
   }
 };
 
-export const getTrack = async (token, id) => {
-  try {
-    const data = await axios.get(`${baseURL}/tracks/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return data.data.items;
-  } catch (error) {
-    return error;
-  }
-};
 export const getRecentlyPlayed = async (token) => {
   try {
     const data = await axios.get(`${baseURL}me/player/recently-played`, {
@@ -47,20 +35,6 @@ export const getRecentlyPlayed = async (token) => {
     return data.data.items;
   } catch (error) {
     return error;
-  }
-};
-export const getAudioFeatures = async (token, ids) => {
-  try {
-    const data = await axios.get(`${baseURL}audio-features?ids=${ids}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return data.data.audio_features;
-  } catch (error) {
-    // 403 desde a depreciacao de nov/2024; o chamador esconde a secao
-    console.warn("audio-features indisponivel:", error?.response?.status);
-    return null;
   }
 };
 export const getUser = async (token) => {

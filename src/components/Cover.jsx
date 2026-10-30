@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
-export function Cover({ src, alt = "", label, className, children }) {
+export function Cover({ src, alt = "", label, className, labelClassName, children }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [src]);
   const showImage = src && !failed;
@@ -23,7 +23,11 @@ export function Cover({ src, alt = "", label, className, children }) {
           className="absolute inset-0 h-full w-full object-cover"
         />
       ) : (
-        label && <span className="font-mono text-[10px] font-medium text-white/35">{label}</span>
+        label && (
+          <span className={cn("font-mono text-[10px] font-medium text-white/35", labelClassName)}>
+            {label}
+          </span>
+        )
       )}
       {children}
     </div>

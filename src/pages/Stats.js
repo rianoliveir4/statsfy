@@ -9,6 +9,7 @@ import {
   getTopItems,
 } from "@/helpers/api";
 import { Progress } from "@/components/ui/progress";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 import { useRouter } from "next/router";
 import { getTrackAnalysis } from "@/helpers/handlers";
@@ -20,7 +21,8 @@ const Stats = () => {
   const [audioFeatures, setAudioFeatures] = useState();
   const [analyzedTracks, setAnalyzedTracks] = useState();
   const [playlists, setPlaylists] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingStep, setLoadingStep] = useState("reading your top artists");
 
   const router = useRouter();
 
@@ -45,18 +47,21 @@ const Stats = () => {
           return router.push("/");
         }
         setTopArtists(topArtistsData);
+        setLoadingStep("reading your top tracks");
         const topTrackData = await getTopItems(
           tokenData,
           "long_term",
           "tracks"
         );
         setTopTracks(topTrackData);
+        setLoadingStep("reading your recent plays");
         const recentlyPlayedData = await getRecentlyPlayed(tokenData);
         setRecentlyPlayed(recentlyPlayedData);
         const recentlyPlayedArray = recentlyPlayedData.map((e) => e.track.id);
         setAnalyzedTracks(
           await getTrackAnalysis(tokenData, recentlyPlayedArray)
         );
+        setLoadingStep("reading your playlists");
         const userPlaylistsData = await getUserPlaylists(tokenData);
         setPlaylists(userPlaylistsData);
       } catch (error) {
@@ -68,15 +73,7 @@ const Stats = () => {
     getData();
   }, []);
   if (loading) {
-    return (
-      <div class="flex items-center justify-center min-h-screen p-5 bg-[#090a0c] min-w-screen">
-        <div class="flex space-x-2 animate-pulse">
-          <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
-          <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
-          <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen step={loadingStep} />;
   }
   return (
     <div className="scroll-smooth bg-[#090a0c]">

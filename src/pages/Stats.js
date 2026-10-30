@@ -13,10 +13,14 @@ import { StatsHeader } from "@/components/stats/StatsHeader";
 import { ReportHero } from "@/components/stats/ReportHero";
 import { TopArtists } from "@/components/stats/TopArtists";
 import { TopTracks } from "@/components/stats/TopTracks";
+import { ListeningClock } from "@/components/stats/ListeningClock";
+import { TasteDrift } from "@/components/stats/TasteDrift";
 import { Playlists } from "@/components/stats/Playlists";
 import { DEFAULT_RANGE, RANGES, getRange } from "@/lib/ranges";
 import { countGenres, minutesListened, topArtistNote } from "@/lib/stats";
 import { formatNumber } from "@/lib/format";
+import { buildClock } from "@/lib/clock";
+import { buildDrift } from "@/lib/drift";
 
 const asList = (value) => (Array.isArray(value) ? value : []);
 const isUnauthorized = (value) => Boolean(value?.message?.includes("401"));
@@ -73,6 +77,8 @@ const Stats = () => {
         setData({
           top,
           recent,
+          clock: buildClock(recent),
+          drift: buildDrift(top),
           playlists,
           playlistTotal: playlistsPage?.total ?? playlists.length,
         });
@@ -107,13 +113,23 @@ const Stats = () => {
     { value: formatNumber(data.playlistTotal), label: "PLAYLISTS" },
   ];
 
+  const nav = [
+    ["Artists", "#artists"],
+    ["Tracks", "#tracks"],
+    data.clock && ["Clock", "#clock"],
+    data.drift && ["Drift", "#drift"],
+    ["Playlists", "#playlists"],
+  ].filter(Boolean);
+
   return (
     <div className="min-h-screen bg-ink">
-      <StatsHeader range={range} onRangeChange={setRange} />
+      <StatsHeader nav={nav} range={range} onRangeChange={setRange} />
       <main className="mx-auto max-w-page px-[18px] pb-[120px] md:px-7">
         <ReportHero caption={getRange(range).caption} stats={heroStats} />
         <TopArtists artists={current.artists} note={topArtistNote(data.top, range)} />
         <TopTracks tracks={current.tracks} />
+        {data.clock && <ListeningClock clock={data.clock} />}
+        {data.drift && <TasteDrift drift={data.drift} />}
         <Playlists items={data.playlists} total={data.playlistTotal} />
       </main>
     </div>

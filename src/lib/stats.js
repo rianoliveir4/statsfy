@@ -9,7 +9,7 @@ export function minutesListened(plays) {
   return Math.round(ms / 60000);
 }
 
-function rankIn(artists, id) {
+export function rankIn(artists, id) {
   const index = artists.findIndex((a) => a.id === id);
   return index < 0 ? null : index + 1;
 }
